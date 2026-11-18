@@ -1,0 +1,181 @@
+openapi: 3.0.3
+info:
+  title: Auth-ecommerce-API
+  version: 1.0.0
+#DTO
+components:
+  schemas:
+
+    UtenteDto:
+      type: object
+      required:
+        - nome
+        - cognome
+        - email
+      properties:
+        id:
+          type: string
+        uuid:
+          type: string
+        nome:
+          type: string
+          minLength: 1
+        cognome:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+          minLength: 1
+        numero:
+          type: string
+        indirizzo:
+          type: string
+        ruolo:
+          type: string
+
+    JwtResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        utente:
+          $ref: '#/components/schemas/UtenteDto'
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          minLength: 1
+
+    RegisterRequest:
+      type: object
+      required:
+        - nome
+        - cognome
+        - email
+        - password
+        - passwordConf
+        - numero
+      properties:
+        nome:
+          type: string
+          minLength: 1
+        cognome:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+          minLength: 1
+        password:
+          type: string
+          minLength: 1
+        passwordConf:
+          type: string
+          minLength: 1
+        numero:
+          type: string
+          minLength: 1
+        indirizzo:
+          type: string
+
+
+  parameters:
+    #Utenti
+    Email:
+      name: email
+      in: query
+      required: false
+      schema:
+        type: string
+    Nome:
+      name: nome
+      in: query
+      required: false
+      schema:
+        type: string
+    Cognome:
+      name: cognome
+      in: query
+      required: false
+      schema:
+        type: string
+    Numero:
+      name: numero
+      in: query
+      required: false
+      schema:
+        type: string
+    Ruolo:
+      name: ruolo
+      in: query
+      required: false
+      schema:
+        type: string
+    DataInizio:
+      name: dataInizio
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+    DataFine:
+      name: dataFine
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+
+#API
+
+paths:
+
+  /api/user/register:
+    post:
+      tags:
+        - Users
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Utente registratocon successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponse'
+
+
+  /api/user/login:
+    post:
+      tags:
+        - Users
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login effettuato con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponse'
+
+
