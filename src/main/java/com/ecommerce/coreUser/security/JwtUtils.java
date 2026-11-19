@@ -1,5 +1,6 @@
-package com.ecommerce.authService.security;
+package com.ecommerce.coreUser.security;
 
+import com.ecommerce.coreUser.entity.Utente;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +32,18 @@ public class JwtUtils {
 
 
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> payload = new HashMap<>();
+
+        if (userDetails instanceof Utente utente) {
+            if (utente.getRuolo() != null && !utente.getRuolo().isBlank()) {
+                payload.put("ruolo", utente.getRuolo());
+            }
+            if (utente.getUuid() != null) {
+                payload.put("uuid", utente.getUuid());
+            }
+        }
+        return generateToken(payload, userDetails);
+
     }
 
     public String generateToken(Map<String, Object> payload, UserDetails userDetails) {

@@ -1,4 +1,4 @@
-package com.ecommerce.authService;
+package com.ecommerce.coreUser;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

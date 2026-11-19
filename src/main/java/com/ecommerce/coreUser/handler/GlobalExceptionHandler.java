@@ -1,4 +1,4 @@
-package com.ecommerce.authService.handler;
+package com.ecommerce.coreUser.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

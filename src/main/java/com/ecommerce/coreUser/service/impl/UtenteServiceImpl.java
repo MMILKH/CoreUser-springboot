@@ -1,20 +1,25 @@
-package com.ecommerce.authService.service.impl;
+package com.ecommerce.coreUser.service.impl;
 
 
-import com.ecommerce.authService.api.model.JwtResponse;
-import com.ecommerce.authService.api.model.LoginRequest;
-import com.ecommerce.authService.api.model.RegisterRequest;
-import com.ecommerce.authService.api.model.UtenteDto;
-import com.ecommerce.authService.entity.Utente;
-import com.ecommerce.authService.repository.UtenteRepository;
-import com.ecommerce.authService.security.JwtUtils;
-import com.ecommerce.authService.service.UtenteService;
+import com.ecommerce.coreUser.Specification.UtenteCriteriaBuilder;
+import com.ecommerce.coreUser.api.model.JwtResponse;
+import com.ecommerce.coreUser.api.model.LoginRequest;
+import com.ecommerce.coreUser.api.model.RegisterRequest;
+import com.ecommerce.coreUser.api.model.UtenteDto;
+import com.ecommerce.coreUser.entity.Utente;
+import com.ecommerce.coreUser.repository.UtenteRepository;
+import com.ecommerce.coreUser.security.JwtUtils;
+import com.ecommerce.coreUser.service.UtenteService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,17 +31,19 @@ public class UtenteServiceImpl implements UtenteService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtService;
     private final AuthenticationManager authenticationManager;
+    private final MongoTemplate mongoTemplate;
 
     public UtenteServiceImpl(UtenteRepository utenteRepository,
                              ModelMapper modelMapper,
                              PasswordEncoder passwordEncoder,
                              JwtUtils jwtService,
-                             AuthenticationManager authenticationManager) {
+                             AuthenticationManager authenticationManager, MongoTemplate mongoTemplate) {
         this.utenteRepository = utenteRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.mongoTemplate = mongoTemplate;
     }
 
     @Override
@@ -116,5 +123,58 @@ public class UtenteServiceImpl implements UtenteService {
         response.setToken(tokenJwt);
         response.setUtente(utenteDto);
         return response;
+    }
+
+
+
+
+    @Override
+    public List<UtenteDto> getUsers(String nome, String cognome, String email, String numero, LocalDate inizio, LocalDate fine, String ruolo) {
+
+        List<Criteria> filters = UtenteCriteriaBuilder.buildAll(
+                nome, cognome, email, ruolo, numero, inizio, fine
+        );
+
+        Query query = new Query();
+        if (!filters.isEmpty()) {
+            query.addCriteria(new Criteria().andOperator(filters.toArray(new Criteria[0])));
+        }
+
+
+        query.fields().exclude("passwordu");
+
+        List<Utente> utenti = mongoTemplate.find(query, Utente.class);
+
+        return utenti.stream()
+                .map(u -> modelMapper.map(u, UtenteDto.class))
+                .toList();
+    }
+
+
+    @Override
+    public UtenteDto updateUser(String id, UtenteDto utenteDto) throws Exception {
+        Utente utenteEsistente = utenteRepository.findByUuid(utenteDto.getUuid());
+        utenteEsistente.setNome(utenteDto.getNome());
+        utenteEsistente.setCognome(utenteDto.getCognome());
+        utenteEsistente.setEmail(utenteDto.getEmail());
+        utenteEsistente.setRuolo(utenteDto.getRuolo());
+        utenteEsistente.setDataUltimaModifica(LocalDateTime.now());
+        utenteRepository.save(utenteEsistente);
+        return modelMapper.map(utenteEsistente, UtenteDto.class);
+    }
+
+    @Override
+    public void deleteUser(String uuid) throws Exception {
+        Utente utenteEsistente = utenteRepository.findByUuid(uuid);
+        if (utenteEsistente != null) {
+            utenteRepository.deleteByUuid(uuid);
+        }
+    }
+
+
+
+    @Override
+    public boolean existsByUuid(String uuid) {
+        return utenteRepository.existsByUuid(uuid);
     }
 }

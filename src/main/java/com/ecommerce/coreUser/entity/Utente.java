@@ -1,4 +1,4 @@
-package com.ecommerce.authService.entity;
+package com.ecommerce.coreUser.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Document(collection = "utenti")
 @Data

@@ -1,7 +1,7 @@
-package com.ecommerce.authService.config;
+package com.ecommerce.coreUser.config;
 
-import com.ecommerce.authService.entity.Utente;
-import com.ecommerce.authService.repository.UtenteRepository;
+import com.ecommerce.coreUser.entity.Utente;
+import com.ecommerce.coreUser.repository.UtenteRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

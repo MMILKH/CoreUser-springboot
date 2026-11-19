@@ -1,4 +1,4 @@
-package com.ecommerce.authService;
+package com.ecommerce.coreUser;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

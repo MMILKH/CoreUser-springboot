@@ -1,4 +1,4 @@
-package com.ecommerce.authService.config;
+package com.ecommerce.coreUser.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ecommerce</groupId>
-	<artifactId>authService</artifactId>
+	<artifactId>coreUser</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>
 	<description/>
@@ -162,8 +162,8 @@
 						<configuration>
 							<inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
 							<generatorName>spring</generatorName>
-							<apiPackage>com.ecommerce.authService.api</apiPackage>
-							<modelPackage>com.ecommerce.authService.api.model</modelPackage>
+							<apiPackage>com.ecommerce.coreUser.api</apiPackage>
+							<modelPackage>com.ecommerce.coreUser.api.model</modelPackage>
 
 							<configOptions>
 								<useSpringBoot3>true</useSpringBoot3>
