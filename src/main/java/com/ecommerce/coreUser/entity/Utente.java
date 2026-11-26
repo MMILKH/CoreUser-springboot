@@ -32,6 +32,8 @@ public class Utente implements UserDetails {
     private String indirizzo;
     private String passwordu;
 
+    private boolean temporaryPassword;
+
     private String ruolo;
 
     private LocalDateTime dataCreazione = LocalDateTime.now();

@@ -75,6 +75,7 @@ public class UtenteServiceImpl implements UtenteService {
         JwtResponse response = new JwtResponse();
         response.setToken(tokenJwt);
         response.setUtente(utenteDto);
+        response.setMustChangePassword(utente.isTemporaryPassword());
         return response;
     }
 
@@ -106,6 +107,12 @@ public class UtenteServiceImpl implements UtenteService {
         utente.setNumero(dto.getNumero());
         utente.setIndirizzo(dto.getIndirizzo());
 
+        if(Boolean.TRUE.equals(dto.getTemporaryPassword())) {
+            utente.setTemporaryPassword(true);
+        }else if (dto.getTemporaryPassword()==null || Boolean.FALSE.equals(dto.getTemporaryPassword())) {
+            utente.setTemporaryPassword(false);
+        }
+
         utente.setDataCreazione(LocalDateTime.now());
         utente.setDataUltimaModifica(LocalDateTime.now());
         utente.setPasswordu(passwordEncoder.encode(dto.getPassword()));
@@ -122,6 +129,7 @@ public class UtenteServiceImpl implements UtenteService {
         JwtResponse response = new JwtResponse();
         response.setToken(tokenJwt);
         response.setUtente(utenteDto);
+        response.setMustChangePassword(utente.isTemporaryPassword());
         return response;
     }
 

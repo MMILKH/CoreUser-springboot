@@ -39,6 +39,9 @@ components:
       properties:
         token:
           type: string
+
+        mustChangePassword:
+          type: boolean
         utente:
           $ref: '#/components/schemas/UtenteDto'
 
@@ -86,6 +89,8 @@ components:
           minLength: 1
         indirizzo:
           type: string
+        temporaryPassword:
+          type: boolean
 
 
   parameters:
